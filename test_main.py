@@ -1,7 +1,7 @@
 import pytest
 
 from main import calcola_media
-from main import min_temp
+from main import calcola_minima
 
 
 def test_media_semplice():
@@ -19,9 +19,13 @@ def test_lista_vuota_solleva_errore():
 
 def test_tutti_mancanti_solleva_errore():
     with pytest.raises(ValueError):
-        calcola_media([None, None])
+        calcola_media([None, None]),
+        calcola_minima([None,None])
 
 
-def test_temperatura_minima():
-    with pytest.raises(ValueError):
-        min_temp([None,None])
+# test per il calcolo della temperatura minima
+def minima_semplice():
+    assert calcola_minima([10,20,30]) == 10
+
+def minima_valori_mancanti():
+    assert calcola_minima([10,None,20]) == 10
