@@ -28,8 +28,8 @@ def calcola_media(valori: list[float | None]) -> float:
     return sum(validi) / len(validi)
 
 
-def min_temp(valori: list[float | None]) -> float:
-    "Temperatura minima, ignorando i valori null"
+def calcola_minima(valori: list[float | None]) -> float:
+    """Temperatura minima, ignorando i valori null"""
     validi_min = [v for v in valori if v is not None]
     if not validi_min:
         raise ValueError("Nessun valore valido per il calcolo della temp minima")
@@ -40,9 +40,11 @@ def main() -> None:
     dati = scarica_temperature(41.89, 12.48)  # Roma
     media_max = calcola_media(dati["temperature_2m_max"])
     media_min = calcola_media(dati["temperature_2m_min"])
+    temp_min = calcola_minima(dati["temperature_2m_max"])
     print(f"Giorni scaricati: {len(dati['time'])}")
     print(f"Media massime: {media_max:.1f} °C")
     print(f"Media minime: {media_min:.1f} °C")
+    print(f"Temperatura minima: {temp_min:.1f} °C")
 
 
 if __name__ == "__main__":

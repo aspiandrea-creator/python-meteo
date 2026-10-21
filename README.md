@@ -1,1 +1,1 @@
-I due file (main & test_main) presenti in questa cartella permettono di effettuare dei calcoli sulle temperature, prendendo i dati direttamente da una oper source tramite api.
+I due file (main & test_main) presenti in questa cartella permettono di effettuare dei calcoli sulle temperature, prendendo i dati direttamente da una open source tramite api.
