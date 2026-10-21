@@ -40,8 +40,10 @@ def main() -> None:
     dati = scarica_temperature(41.89, 12.48)  # Roma
     media_max = calcola_media(dati["temperature_2m_max"])
     media_min = calcola_media(dati["temperature_2m_min"])
-    temp_min = calcola_minima(dati["temperature_2m_max"])
+    temp_min = calcola_minima(dati["temperature_2m_min"])
     print(f"Giorni scaricati: {len(dati['time'])}")
+    print(f"Temperature massimescaricate: {dati['temperature_2m_max']} °C")
+    print(f"Temperature minime scaricate: {dati['temperature_2m_min']} °C")
     print(f"Media massime: {media_max:.1f} °C")
     print(f"Media minime: {media_min:.1f} °C")
     print(f"Temperatura minima: {temp_min:.1f} °C")
