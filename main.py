@@ -35,19 +35,52 @@ def calcola_minima(valori: list[float | None]) -> float:
         raise ValueError("Nessun valore valido per il calcolo della temp minima")
     return min(validi_min)
 
+def righe_giornaliere(dati: dict) -> list[dict]:
+    """Restituisce una lista di dizionari, uno per ogni giorno, con le temperature massime e minime."""
+    return [
+        {"giorno": giorno, "temp_max": temp_max, "temp_min": temp_min}
+        for giorno, temp_max, temp_min in zip(
+            dati["time"], dati["temperature_2m_max"], dati["temperature_2m_min"]
+        )
+    ]
+
+def giorno_piu_caldo(righe: list[dict]) -> dict:
+    """Restituisce il record del giorno con la temperatura massima più alta."""
+    # escludo i record con temperatura massima mancante
+    validi = [r for r in righe if r["temp_max"] is not None]
+    if not validi:
+        raise ValueError("Nessuna temperatura massima valida")
+    # lambda serve a specificare che il criterio di confronto è la temperatura massima
+    # in particolare è una funzione usa e getta che prende un record e restituisce il valore massimo
+    return max(validi, key=lambda r: r["temp_max"])
+
+def giorni_sotto_soglia(righe: list[dict], soglia: float) -> list[str]:
+    """Restituisce le date dei giorni con temperatura minima sotto la soglia."""
+    return [
+        r["giorno"]
+        for r in righe
+        # and valuta la seconda condizione solo se la prima è vera
+        # quindi se temp_min è None il confronto non viene eseguito e non c'è errore
+        if r["temp_min"] is not None and r["temp_min"] < soglia
+    ]
 
 def main() -> None:
     dati = scarica_temperature(41.89, 12.48)  # Roma
     media_max = calcola_media(dati["temperature_2m_max"])
     media_min = calcola_media(dati["temperature_2m_min"])
     temp_min = calcola_minima(dati["temperature_2m_min"])
-    print(f"Giorni scaricati: {len(dati['time'])}")
-    print(f"Temperature massimescaricate: {dati['temperature_2m_max']} °C")
+    righe = righe_giornaliere(dati)
+    piu_caldo = giorno_piu_caldo(righe)
+    giorni_freddi = giorni_sotto_soglia(righe, 10.0)
+    
+    print(f"Giorni scaricati: {len(righe)}")
+    print(f"Temperature massime scaricate: {dati['temperature_2m_max']} °C")
     print(f"Temperature minime scaricate: {dati['temperature_2m_min']} °C")
     print(f"Media massime: {media_max:.1f} °C")
     print(f"Media minime: {media_min:.1f} °C")
-    print(f"Temperatura minima: {temp_min:.1f} °C")
-
+    print(f"Temperatura minima del periodo: {temp_min:.1f} °C")
+    print(f"Giorno più caldo: {piu_caldo['giorno']} ({piu_caldo['temp_max']:.1f} °C)")
+    print(f"Giorni con minima sotto 10 °C: {', '.join(giorni_freddi) or 'nessuno'}")
 
 if __name__ == "__main__":
     main()
